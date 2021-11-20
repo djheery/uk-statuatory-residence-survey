@@ -1,0 +1,80 @@
+input[type='radio']:hover {
+  cursor: pointer;
+}
+
+.radio-btn-container {
+  position: relative !important;
+}
+  /* Multiple */
+.radio-multiple {
+  display: flex;
+  flex-basis: 1;
+  align-items: stretch;
+  padding: 30px 10px;
+  justify-content: center;
+  border: .5px solid #aaa;
+  border-radius: 5px;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  background-color: #fff;
+  transition: border .1s
+}
+.radio-multiple input {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  opacity: 0;
+  /* width: 100%; */
+  transition: 180ms transform ease-in-out;
+  transform: scale(8)
+}
+.radio-btn-container:hover {
+  cursor: pointer;
+}
+
+.survey-option:hover {
+  cursor: pointer;
+}
+.radio-multiple:hover {
+  cursor: pointer;
+}
+
+/* Y-N */
+.radio-y-n {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: .5px solid #aaa;
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  position: relative;
+  background-color: #fff;
+  transition: border .1s;
+  margin-right: 10px;
+}
+
+.radio-y-n label /* .radio-multiple label */ {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.radio-y-n input {
+  position: absolute;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  transition: 180ms transform ease-in-out;
+  transform: scale(8)
+}
+
+.radio-y-n:hover, .radio-multiple:hover {
+  border: 2px solid #000;
+  opacity: 0.8;
+  cursor: pointer;
+}
+.radio-y-n > input:checked  {
+  background-color: #000;
+}

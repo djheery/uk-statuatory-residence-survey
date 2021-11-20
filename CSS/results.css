@@ -1,0 +1,24 @@
+
+
+.bacc-disclaimer {
+  font-size: .8rem;
+}
+
+.bacc-results-container__summary {
+  text-align: center;
+  line-height: 1.8rem;
+  font-size: .9rem;
+}
+
+@media only screen and (min-width: 700px) {
+  .bacc-results-container {
+    padding: 20px;
+    border: 2px #eee solid
+  }
+
+  .bacc-results-container__summary {
+    text-align: center;
+    line-height: 1.8rem;
+    font-size: unset;
+  }
+}

@@ -1,0 +1,14 @@
+.transition-two {
+  opacity: 1;
+  transition: all 1s;
+}
+
+.answer-options-container {
+  opacity: 1;
+  transition: 1s all;
+}
+
+.transition {
+  opacity: 0;
+  transition: 1s all;
+}

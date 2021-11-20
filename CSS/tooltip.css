@@ -1,0 +1,63 @@
+.bacc-tooltip-container {
+  position: relative;
+}
+
+.bacc-tooltip-icon {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  border: 1px solid transparent;
+  background-color: #BA992F;
+  height: 17px;
+  width: 17px; 
+  border-radius: 50%;
+  padding: 5px;
+  justify-content: center;
+  font-size: .7rem;
+}
+
+.bacc-tooltip-content{
+  position: absolute;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  top: -100px;
+  height: fit-content;
+  overflow: hidden;
+  opacity: 0;
+  padding: 10px;
+  font-size: .8rem;
+  width: 250px;
+  background-color: #fff;
+  left: -240px;
+  z-index: -1;
+  transition: all ease-in .3s;
+  box-shadow: .5rem .5rem 2rem rgba(0,0,0,0.2);
+}
+
+.bacc-tooltip-icon:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.bacc-tooltip-displayed {
+  z-index: 3;
+  height: fit-content;
+  display: block;
+  top: 20px;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.bacc-tooltip-close {
+  background-color: #191A18;
+  text-align: center;
+  width: 21px;
+  border-radius: 50%;
+  position: absolute;
+  font-size: .8rem;
+  bottom: 8px;
+  color: #fff;
+  right: 10px;
+  z-index: 100;
+}
