@@ -35,7 +35,6 @@ const UK_STATUATORY_RESIDENCE_UI = (() => {
         </div>
         `
       }
-
     },
     setNextQuestionDataset: (i, q) => {
       const NQ = q.NQ.length > 1 ? q.NQ[i] : q.NQ[0]

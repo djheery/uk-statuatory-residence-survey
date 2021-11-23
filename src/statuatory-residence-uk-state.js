@@ -4,8 +4,10 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
     NQ: 1,
     PQ: [],
     PA: [],
+    residentInPrevious: false,
     QUALIFIES: [],
     ties: [],
+    tiesNeeded,
     questionType: '',
   }
 
@@ -96,12 +98,12 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
       id: 511,
       QC: 'Have you spent <span class="fw-bold">one or more</span> night in this accommodation in the chosen tax year?',
       options: ['Yes', 'No'],
-      tieTester: false,
+      tieTester: true,
       NQ: [6, 52],
       QUALIFIES: [true, false],
       tie: 'accomodation',
       type: 'RADIO',
-      statement: 'By having, and staying in bought or rented accomodation the United Kingdom',
+      statement: 'By having available, and staying in bought or rented accomodation the you qualify for the accomodation tie to the UK',
     },
     {
       id: 52, 
@@ -119,14 +121,101 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
       id: 521, 
       QC: 'Have you stayed at this accomodation for more 16 or more nights? ',
       options: ['Yes', 'No'],
-      tieTester: false,
-      NQ: [521, 6],
+      tieTester: true,
+      NQ: [6],
       QUALIFIES: [true, false],
       tie: 'accomodation',
       type: 'RADIO',
-      statement: '',
+      statement: 'If you stay with a close relative for 16 or more nights, you are considered having an accomodation tie in the UK.',
+    },
+    {
+      id: 6, 
+      QC: 'Do you have a spouse or civil partner whom is located in the UK?',
+      options: ['Yes', 'No'],
+      tieTester: true,
+      NQ: [7, 61],
+      QUALIFIES: [true, false],
+      tie: 'family',
+      type: 'RADIO',
+      statement: 'If you have a spouse or civil partner whom is located in the UK you <span class="fw-bold">may be</span> considered to have a family tie, for the purpouse of this survey we have counted this as 1 family tie.',
+    },
+    {
+      id: 61, 
+      QC: 'Are you the parent of a child that is considered a UK resident, and is under the age of 18 ?',
+      options: ['Yes', 'No'],
+      tieTester: true,
+      NQ: [7],
+      QUALIFIES: [true, false],
+      tie: 'family',
+      type: 'RADIO',
+      statement: 'If you have a child under the age of 18, whom is located in the UK you <span class="fw-bold">may be</span> considered to have a family tie, for the purpouse of this survey we have counted this as family tie.',
+    },
+    {
+      id: 7, 
+      QC: 'Have you worked in the UK for 40 or more days (whether continuosly or intermittently)? - A work day is considered working for a period of three or more hours',
+      options: ['Yes', 'No'],
+      tieTester: true,
+      NQ: [8],
+      QUALIFIES: [true, false],
+      tie: 'work',
+      type: 'RADIO',
+      statement: 'If you worked in the UK for 40 or more days, you are considered to have a work tie to the uk',
+    },
+    {
+      id: 8, 
+      QC: 'Have you spent 90 days (3 months) or more in this or any of the 3 tax years preceeding the tax year in question?',
+      options: ['Yes', 'No'],
+      tieTester: true,
+      NQ: [9],
+      QUALIFIES: [true, false],
+      tie: '90 day',
+      type: 'RADIO',
+      statement: 'If you spent 90 or more days in the UK in this or any of the 3 tax years preceeding the tax year in question, you are considered to have a 90 day tie to the UK',
+    },
+    {
+      id: 9, 
+      QC: 'In the tax year in question, have you spent the majority of your days in the UK?',
+      options: ['Yes', 'No'],
+      tieTester: true,
+      NQ: [10],
+      QUALIFIES: [true, false],
+      tie: '90 day',
+      type: 'RADIO',
+      statement: 'If the majority of your year has been spent in the UK, you are considered to have a country tie to the UK.',
+    },
+    {
+      id: 10, 
+      QC: 'Were you a resident in any of the previous tax years?',
+      options: ['Yes', 'No'],
+      tieTester: true,
+      NQ: [11, 12],
+      QUALIFIES: [true, false],
+      tie: 'RESIDENCY',
+      type: 'RADIO',
+      statement: 'If you were a resident in previous years this affects how many ties you need to be considered a UK resident.',
+    },
+    {
+      id: 11, 
+      QC: 'How many days did you spend in the UK in the Tax year?',
+      options: ['More than 45 but Fewer than 91', 'More than 90 but fewer than 121', 'More than 120', 'None of these'],
+      tieTester: false,
+      NQ: [-1],
+      QUALIFIES: [false, false],
+      tiesNeeded: [4, 3, 2, 'DNQ'],
+      type: 'SELECT',
+      statement: 'If you were a resident in previous years this affects how many ties you need to be considered a UK resident.',
+    },
+    {
+      id: 12, 
+      QC: 'How many days did you spend in the UK in the Tax year?',
+      options: ['More than 15 but fewer than 46 ','More than 45 but Fewer than 91', 'More than 90 but fewer than 121', 'More than 120', 'None of these'],
+      tieTester: false,
+      NQ: [-1],
+      QUALIFIES: [false, false],
+      tiesNeeded: [4, 3, 2, 1, 'DNQ'],
+      type: 'SELECT',
+      statement: 'If you were a resident in previous years this affects how many ties you need to be considered a UK resident.',
     }
-
   ]
 
   return {
@@ -155,9 +244,9 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
         console.log(state.QUALIFIES)
       } 
     },
-    updateTies: (tie, statement) => {
+    updateTies: (q) => {
 
-      state.ties.push({tie, statement})
+      state.ties.push({tie: q.tie, statement:""})
     }, 
     updateQuestionType: (type) => {
       state.type = type
