@@ -26,7 +26,6 @@ const UK_STATUATORY_RESIDENCE_UI = (() => {
 
     },
     displayRadioQuestion: (q) => {
-      console.log(q.options)
       for(let i = 0; i < q.options.length; i++) {
         selectors.answerContainer.innerHTML += `
         <div class="radio-btn-container radio-y-n">
@@ -38,7 +37,6 @@ const UK_STATUATORY_RESIDENCE_UI = (() => {
     },
     setNextQuestionDataset: (i, q) => {
       const NQ = q.NQ.length > 1 ? q.NQ[i] : q.NQ[0]
-      console.log(NQ)
       return NQ
     },
     displaySelectQuestion: (q) => {
@@ -49,41 +47,88 @@ const UK_STATUATORY_RESIDENCE_UI = (() => {
           </select>
         </div>
       `
+      console.log(q)
       const selectBox = document.querySelector('#survey-select-box')
-      for(let i = 0; i < q.selectOptions.length; i++) {
-        selectBox.innerHTML += `<option value="${q.selectOptions.selectValue}">${q.selectOptions.selectTitle}</option>`
+      for(let i = 0; i < q.options.length; i++) {
+        selectBox.innerHTML += `<option value="${q.options[i]}">${q.options[i]}</option>`
       } 
     },
     displayPreviousQuestion: () => {
 
     },
-    displayFinalVerdict: (Q) => {
+    displayFinalVerdict: (Q, dnq, st, stn) => {
       selectors.questionContainer.innerHTML = ``
       selectors.answerContainer.innerHTML = ``
-      if(Q.QUALIFIES.length >= 1) {
-        selectors.resultsContainer.innerHTML = `
-        <div class="final-verdict-container">
-          <p>The answers you have provided indicate that you <span class="fw-bold">do not qualify</span> for the SEISS 5 grant. Based on the answers provided the following reasons may be why we have come to this conclusion</p>
-          <ul class="reasons mgb-20"></ul>
-        </div>
-
-        `
-        const reasons = document.querySelector('.reasons')
-        for(let i = 0; i < Q.QUALIFIES.length; i++) {
-          reasons.innerHTML += `
-            <li>${Q.QUALIFIES[i].statement}</li>
-          `
-        }
+      if(dnq !== null) {
+        Q.QUALIFIES.length >= 1 ? 
+          UK_STATUATORY_RESIDENCE_UI.automaticResidenceTestQualifies(dnq) : 
+          UK_STATUATORY_RESIDENCE_UI.automaticResidenceTestDNQ()
       } else {
-        selectors.resultsContainer.innerHTML = `
-        <div class="final-verdict-container">
-          <p class="mgb-20">The answers you have provided indicate that <span class="accent-clr fw-bold"> you do qualify </span> for the SEISS 5 grant. We reccomend you log in to your Self Assesment portal to find out further details on how you cab claim the grant.</p>
-        </div>
-        `
+          stn >= st ? 
+            UK_STATUATORY_RESIDENCE_UI.sufficientTiesTestQualifies() :
+            UK_STATUATORY_RESIDENCE_UI.sufficientTiesTestDNQ()
       }
       
+      
+      UK_STATUATORY_RESIDENCE_UI.displayFinalResultLine(Q)
+    },
+    automaticResidenceTestQualifies: (q) => {
+      selectors.resultsContainer.innerHTML = `
+      <div class="final-verdict-container">
+        <p>The answers you have provided indicate that <span class="fw-bold">you may qualify</span> as a UK resident according to the "Automatic Residence test".<br>Our reasoning for coming to this conclusion is based on your answers. You can find the reasoning below. We reccomend that you contact a proffessional before declaring as a UK resident, they can help you understand the full extent of your residency status.</p>
+        <ul class="reasons ar-test"></reasons>
+      </div>`
+      const reasons = document.querySelector('.reasons')
+      UK_STATUATORY_RESIDENCE_UI.findAnswers(reasons, q)
+    },
+    automaticResidenceTestDNQ: () => {
+      selectors.resultsContainer.innerHTML = `
+      <div class="final-verdict-container">
+        <p>The answers you have provided indicate that you <span class="fw-bold">do not qualify</span> as a UK resident according to the "Automatic Residence test".<br>You have chosen not to take the "sufficient ties test"; however,if you have reason to believe you may be classed as a UK resident, we reccomend you consult a professional.</p>
+      </div>
+      `
+    },
+    sufficientTiesTestDNQ: () => {
+      selectors.resultsContainer.innerHTML = `
+      <div class="final-verdict-container">
+        <p>The answers you have provided indicate that you <span class="fw-bold">do not qualify</span> as a UK resident according to the "Automatic Residence test" and the "Sufficient Ties Test".<br>However,if you have reason to believe you may be classed as a UK resident, we reccomend you consult a professional.</p>
+      </div>
+      `
+    },
+    sufficientTiesTestQualifies: (st, stn) => {
+      selectors.resultsContainer.innerHTML = `
+      <div class="final-verdict-container">
+        <p>The answers you have provided indicate that <span class="fw-bold">you may qualify</span> as a UK resident according to the "Sufficient Ties Test".<br>As an individual that spends ---ANSWER--- days in the UK you need ${stn} ties to qualify as a UK resident. Your answers show that you have met this qualification. The ties you have qualified for and their reasons are listed below.</p>
+        <ul class="reasons st-test"></reasons>
+      </div>`
+      const reasons = document.querySelector('.reasons')
+      UK_STATUATORY_RESIDENCE_UI.findAnswers(reasons, st)
+    },
+    displayReasonsSTT: (container, arr) => {
+      for(i = 0; i < arr.length; i++) {
+        container.innerHTML += `
+          <li>${arr[i].tie}</li>
+          <ul>
+            <li>${arr[i].statement}</li>
+          </ul>
+        `
+      }
+    },
+    displayReasonsAR: (container, arr) => {
+      for(i = 0; i < arr.length; i++) {
+        container.innerHTML += `
+          <li>${arr[i].statement}</li>
+        `
+      }
+    },
+    findAnswers: (container, arr) => {
+      container.classList.contains('ar-test') ?
+        UK_STATUATORY_RESIDENCE_UI.displayReasonsAR(container, arr) :
+        UK_STATUATORY_RESIDENCE_UI.displayReasonsSTT(container, arr)
+    },
+    displayFinalResultLine: (q) => {
       document.querySelector('.final-verdict-container').innerHTML += `
-        <p>${Q.QC}</p>
+      <p>${q.QC}</p>
       `
     },
     setBtnData: () => {

@@ -4,7 +4,6 @@ const UK_STATUATORY_RESIDENCE_APP = (() => {
   const ui = UK_STATUATORY_RESIDENCE_UI.getSelectors()
   const loadEventListeners = () => {
     ui.answerContainer.addEventListener('click', e => {
-      console.log(e.target.dataset.qualifies)
       setData(parseFloat(e.target.dataset.nq), e.target.dataset.qualifies)
     })
     ui.btnContainer.addEventListener('click', checkQuestion)
@@ -18,7 +17,7 @@ const UK_STATUATORY_RESIDENCE_APP = (() => {
   const nextQuestionUi = (nq) => {
     UK_STATUATORY_RESIDENCE_UI.transitionOut()
     setTimeout((() => {
-      UK_STATUATORY_RESIDENCE_UI.displayNextQuestion(nq)
+      nq.id === -1 ? console.log(true) : UK_STATUATORY_RESIDENCE_UI.displayNextQuestion(nq)
       UK_STATUATORY_RESIDENCE_UI.transitionIn()
     }), 800)
   }
@@ -29,10 +28,34 @@ const UK_STATUATORY_RESIDENCE_APP = (() => {
     UK_STATUATORY_RESIDENCE_STATE.updateCurrentQuestion(id)
     UK_STATUATORY_RESIDENCE_UI.setNextQuestionData(id)
     const NQ = questions.find(q => q.id === id)
-    NQ.tieTester === false ?
-      UK_STATUATORY_RESIDENCE_STATE.addQualificationReason(qualificationBool, CQ) :
-      UK_STATUATORY_RESIDENCE_STATE.updateTies(qualificationBool, CQ)
-    nextQuestionUi(NQ)
+    const testType = UK_STATUATORY_RESIDENCE_STATE.checkTestType(NQ.testType)
+    if(testType === 'FINAL') prepareResults(id, NQ, CQ, qualificationBool)
+    testType === 'AR' ? autoresidentTest(id, NQ, CQ, qualificationBool) : sufficienttiesTest(id, NQ, CQ, qualificationBool)
+  }
+
+  const autoresidentTest = (id, nq, cq, bool) => {
+    if(id === 4 && UK_STATUATORY_RESIDENCE_STATE.checkAutoResident() === true) {
+      UK_STATUATORY_RESIDENCE_UI.displayFinalVerdict(
+        questions.find(q => q.id === -1),
+        state.QUALIFIES,
+        null, null)
+    } else {
+      UK_STATUATORY_RESIDENCE_STATE.addQualificationReason(bool, cq)
+      nextQuestionUi(nq)
+    }
+  }
+
+  const sufficienttiesTest = (id, nq, cq, bool) => {
+    UK_STATUATORY_RESIDENCE_STATE.updateTies(bool, cq)
+    nextQuestionUi(nq)
+  }
+
+  const prepareResults = (id, nq, cq, bool) => {
+    if(cq.id === 4) {
+      UK_STATUATORY_RESIDENCE_UI.displayFinalVerdict(nq, state.QUALIFIES, null, null)
+    } else {
+      
+    }
   }
 
   const previousQuestion = () => {
