@@ -1,4 +1,4 @@
-const SEISS_SURVEY_UI = (() => {
+const UK_STATUATORY_RESIDENCE_UI = (() => {
   const selectors = {
     questionContainer: document.querySelector('.question-container'),
     btnContainer: document.querySelector('.question-btn__container'),
@@ -12,21 +12,48 @@ const SEISS_SURVEY_UI = (() => {
     getSelectors: () => {
       return selectors
     },
+    setNextQuestionData: (id, qualifies) => {
+      selectors.answerContainer.dataset.nextquestion = id;
+      selectors.answerContainer.dataset.qualifies = qualifies
+    },
     displayNextQuestion: (q) =>  {
       selectors.btnContainer.innerHTML = ''
-      if(q.id !== -1) {
-        selectors.answerContainer.dataset.nextquestion = q.NQ[0]
-        selectors.questionContainer.innerHTML = q.QC
-        selectors.answerContainer.innerHTML = ''
-        for(let i = 0; i < q.options.length; i++) {
-          selectors.answerContainer.innerHTML += `
-          <div class="radio-btn-container radio-y-n">
-            <label for="survey-question" class="survey-option">${q.options[i]}</label>
-            <input type="radio" name="survey-radio-btn" id="survey-radio-btn" class="survey-radio-btn" data-dnq="${q.DNQ[i]}">
-          </div>
-          `
-        }
+      selectors.answerContainer.dataset.nextquestion = ''
+      selectors.questionContainer.innerHTML = q.QC
+      selectors.answerContainer.innerHTML = ''
+      if(q.type === 'RADIO') UK_STATUATORY_RESIDENCE_UI.displayRadioQuestion(q)
+      if(q.type === 'SELECT') UK_STATUATORY_RESIDENCE_UI.displaySelectQuestion(q)
+
+    },
+    displayRadioQuestion: (q) => {
+      console.log(q.options)
+      for(let i = 0; i < q.options.length; i++) {
+        selectors.answerContainer.innerHTML += `
+        <div class="radio-btn-container radio-y-n">
+          <label for="survey-question" class="survey-option">${q.options[i]}</label>
+          <input type="radio" data-NQ='${UK_STATUATORY_RESIDENCE_UI.setNextQuestionDataset(i, q)}' name="survey-radio-btn" id="survey-radio-btn" class="survey-radio-btn" data-QUALIFIES="${q.QUALIFIES[i]}">
+        </div>
+        `
       }
+
+    },
+    setNextQuestionDataset: (i, q) => {
+      const NQ = q.NQ.length > 1 ? q.NQ[i] : q.NQ[0]
+      console.log(NQ)
+      return NQ
+    },
+    displaySelectQuestion: (q) => {
+      selectors.answerContainer.innerHTML += `
+        <div class="survey-select-container"> 
+          <select name="survey-select-box" id="survey-select-box">
+
+          </select>
+        </div>
+      `
+      const selectBox = document.querySelector('#survey-select-box')
+      for(let i = 0; i < q.selectOptions.length; i++) {
+        selectBox.innerHTML += `<option value="${q.selectOptions.selectValue}">${q.selectOptions.selectTitle}</option>`
+      } 
     },
     displayPreviousQuestion: () => {
 
@@ -34,7 +61,7 @@ const SEISS_SURVEY_UI = (() => {
     displayFinalVerdict: (Q) => {
       selectors.questionContainer.innerHTML = ``
       selectors.answerContainer.innerHTML = ``
-      if(Q.DNQ.length >= 1) {
+      if(Q.QUALIFIES.length >= 1) {
         selectors.resultsContainer.innerHTML = `
         <div class="final-verdict-container">
           <p>The answers you have provided indicate that you <span class="fw-bold">do not qualify</span> for the SEISS 5 grant. Based on the answers provided the following reasons may be why we have come to this conclusion</p>
@@ -43,9 +70,9 @@ const SEISS_SURVEY_UI = (() => {
 
         `
         const reasons = document.querySelector('.reasons')
-        for(let i = 0; i < Q.DNQ.length; i++) {
+        for(let i = 0; i < Q.QUALIFIES.length; i++) {
           reasons.innerHTML += `
-            <li>${Q.DNQ[i].statement}</li>
+            <li>${Q.QUALIFIES[i].statement}</li>
           `
         }
       } else {
