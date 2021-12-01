@@ -42,15 +42,15 @@ const UK_STATUATORY_RESIDENCE_UI = (() => {
     displaySelectQuestion: (q) => {
       selectors.answerContainer.innerHTML += `
         <div class="survey-select-container"> 
-          <select name="survey-select-box" id="survey-select-box">
+          <select name="survey-select-box" class="select-box" id="survey-select-box">
 
           </select>
         </div>
       `
-      console.log(q)
       const selectBox = document.querySelector('#survey-select-box')
       for(let i = 0; i < q.options.length; i++) {
-        selectBox.innerHTML += `<option value="${q.options[i]}">${q.options[i]}</option>`
+        selectBox.innerHTML += `
+        <option value="${q.options[i]}" data-tiesNeeded=${q.tiesNeeded[i]} data-NQ='${UK_STATUATORY_RESIDENCE_UI.setNextQuestionDataset(i, q)}'>${q.options[i]}</option>`
       } 
     },
     displayPreviousQuestion: () => {
@@ -61,11 +61,12 @@ const UK_STATUATORY_RESIDENCE_UI = (() => {
       selectors.answerContainer.innerHTML = ``
       if(dnq !== null) {
         Q.QUALIFIES.length >= 1 ? 
-          UK_STATUATORY_RESIDENCE_UI.automaticResidenceTestQualifies(dnq) : 
-          UK_STATUATORY_RESIDENCE_UI.automaticResidenceTestDNQ()
+        UK_STATUATORY_RESIDENCE_UI.automaticResidenceTestQualifies(dnq) : 
+        UK_STATUATORY_RESIDENCE_UI.automaticResidenceTestDNQ()
       } else {
-          stn >= st ? 
-            UK_STATUATORY_RESIDENCE_UI.sufficientTiesTestQualifies() :
+          console.log(st, stn)
+          stn >= st.length ? 
+            UK_STATUATORY_RESIDENCE_UI.sufficientTiesTestQualifies(st, stn) :
             UK_STATUATORY_RESIDENCE_UI.sufficientTiesTestDNQ()
       }
       

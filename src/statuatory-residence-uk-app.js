@@ -1,10 +1,16 @@
-const UK_STATUATORY_RESIDENCE_APP = (() => {
+  const UK_STATUATORY_RESIDENCE_APP = (() => {
   const state = UK_STATUATORY_RESIDENCE_STATE.getState()
   const questions = UK_STATUATORY_RESIDENCE_STATE.getQuestions()
   const ui = UK_STATUATORY_RESIDENCE_UI.getSelectors()
-  const loadEventListeners = () => {
-    ui.answerContainer.addEventListener('click', e => {
-      setData(parseFloat(e.target.dataset.nq), e.target.dataset.qualifies)
+  const loadEventListeners = () => {      
+      ui.answerContainer.addEventListener('change', e => {
+        let targetQuestion = e.target.dataset.nq; 
+        let qualifies = e.target.dataset.qualifies; 
+        if(e.target.classList.contains('select-box')) {
+          targetQuestion = getSelectQuestion(e.target);
+          qualifies = parseFloat(getTiesNeeded(e.target));
+        }
+      setData(parseFloat(targetQuestion), qualifies)
     })
     ui.btnContainer.addEventListener('click', checkQuestion)
   }
@@ -46,21 +52,36 @@ const UK_STATUATORY_RESIDENCE_APP = (() => {
   }
 
   const sufficienttiesTest = (id, nq, cq, bool) => {
-    UK_STATUATORY_RESIDENCE_STATE.updateTies(bool, cq)
-    nextQuestionUi(nq)
+    if(id === -1) {
+      console.log(bool)
+      const tiesNeeded = state.tiesNeeded;
+      prepareResults(id, nq, null, null, state.ties, tiesNeeded)
+      console.log(state.ties, state.tiesNeeded);
+    } else {
+      UK_STATUATORY_RESIDENCE_STATE.updateTies(bool, cq)
+      nextQuestionUi(nq)
+    }
   }
 
-  const prepareResults = (id, nq, cq, bool) => {
+  const prepareResults = (id, nq, cq, bool, ties, tiesNeeded) => {
     if(cq.id === 4) {
       UK_STATUATORY_RESIDENCE_UI.displayFinalVerdict(nq, state.QUALIFIES, null, null)
     } else {
-      
+      UK_STATUATORY_RESIDENCE_UI.displayFinalVerdict(nq, null, ties, tiesNeeded)
     }
   }
 
   const previousQuestion = () => {
 
   }
+
+  const getSelectQuestion = (target) => {
+     return target.options[target.selectedIndex].dataset.nq
+  }
+
+  const getTiesNeeded = (target) => {
+    return target.options[target.selectedIndex].dataset.tiesneeded
+  };
 
   return {
     init: () => {

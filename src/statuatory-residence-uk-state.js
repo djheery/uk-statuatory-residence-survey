@@ -8,7 +8,7 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
     QUALIFIES: [],
     testType: 'AR',
     ties: [],
-    tiesNeeded: 'DNQ',
+    tiesNeeded: 0,
     questionType: '',
   }
 
@@ -205,9 +205,9 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
       testType: 'ST', 
       QC: 'Were you a resident in any of the previous tax years?',
       options: ['Yes', 'No'],
-      tieTester: true,
+      tieTester: false,
       NQ: [11, 12],
-      QUALIFIES: [true, false],
+      QUALIFIES: [false, false],
       tie: 'RESIDENCY',
       type: 'RADIO',
       statement: 'If you were a resident in previous years this affects how many ties you need to be considered a UK resident.',
@@ -265,10 +265,8 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
       } 
     },
     updateTies: (bool, q) => {
-      console.log(bool)
       if(bool != 'false')
         state.ties.push({tie: q.tie, statement: q.statement})
-      console.log(state.ties)
     }, 
     updateQuestionType: (type) => {
       state.type = type
