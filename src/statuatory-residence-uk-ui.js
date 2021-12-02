@@ -64,8 +64,8 @@ const UK_STATUATORY_RESIDENCE_UI = (() => {
         UK_STATUATORY_RESIDENCE_UI.automaticResidenceTestQualifies(dnq) : 
         UK_STATUATORY_RESIDENCE_UI.automaticResidenceTestDNQ()
       } else {
-          console.log(st, stn)
-          stn >= st.length ? 
+          console.log(st.length, stn)
+          st.length >= stn ?
             UK_STATUATORY_RESIDENCE_UI.sufficientTiesTestQualifies(st, stn) :
             UK_STATUATORY_RESIDENCE_UI.sufficientTiesTestDNQ()
       }
@@ -97,9 +97,10 @@ const UK_STATUATORY_RESIDENCE_UI = (() => {
       `
     },
     sufficientTiesTestQualifies: (st, stn) => {
+      const state = UK_STATUATORY_RESIDENCE_STATE.getState()
       selectors.resultsContainer.innerHTML = `
       <div class="final-verdict-container">
-        <p>The answers you have provided indicate that <span class="fw-bold">you may qualify</span> as a UK resident according to the "Sufficient Ties Test".<br>As an individual that spends ---ANSWER--- days in the UK you need ${stn} ties to qualify as a UK resident. Your answers show that you have met this qualification. The ties you have qualified for and their reasons are listed below.</p>
+        <p>The answers you have provided indicate that <span class="fw-bold">you may qualify</span> as a UK resident according to the "Sufficient Ties Test".<br>As an individual that spends <span class="fw-bold">${state.daysSpent}</span> days in the UK you need <span class="fw-bold">${stn}</span> ties to qualify as a UK resident. Your answers show that you have met this qualification. The ties you have qualified for and their reasons are listed below.</p>
         <ul class="reasons st-test"></reasons>
       </div>`
       const reasons = document.querySelector('.reasons')

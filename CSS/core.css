@@ -66,3 +66,20 @@ ul {
 .pos-a {
   position: absolute;
 }
+
+.survey-select-container:focus-within {
+  border-color: #ba9f2a;
+}
+
+.survey-select-container {
+  border: #000 1px solid;
+  height: 37px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+select {
+  border: none;
+}

@@ -7,6 +7,7 @@
         let targetQuestion = e.target.dataset.nq; 
         let qualifies = e.target.dataset.qualifies; 
         if(e.target.classList.contains('select-box')) {
+          state.daysSpent = setDaysNeeded(e.target).toLowerCase();
           targetQuestion = getSelectQuestion(e.target);
           qualifies = parseFloat(getTiesNeeded(e.target));
         }
@@ -35,7 +36,7 @@
     UK_STATUATORY_RESIDENCE_UI.setNextQuestionData(id)
     const NQ = questions.find(q => q.id === id)
     const testType = UK_STATUATORY_RESIDENCE_STATE.checkTestType(NQ.testType)
-    if(testType === 'FINAL') prepareResults(id, NQ, CQ, qualificationBool)
+    if(testType === 'FINAL' && CQ.id == 4) prepareResults(id, NQ, CQ, qualificationBool)
     testType === 'AR' ? autoresidentTest(id, NQ, CQ, qualificationBool) : sufficienttiesTest(id, NQ, CQ, qualificationBool)
   }
 
@@ -53,9 +54,9 @@
 
   const sufficienttiesTest = (id, nq, cq, bool) => {
     if(id === -1) {
-      console.log(bool)
+      state.tiesNeeded = bool;
       const tiesNeeded = state.tiesNeeded;
-      prepareResults(id, nq, null, null, state.ties, tiesNeeded)
+      prepareResults(id, nq, cq, null, state.ties, tiesNeeded)
       console.log(state.ties, state.tiesNeeded);
     } else {
       UK_STATUATORY_RESIDENCE_STATE.updateTies(bool, cq)
@@ -82,6 +83,11 @@
   const getTiesNeeded = (target) => {
     return target.options[target.selectedIndex].dataset.tiesneeded
   };
+
+  const setDaysNeeded = (target) => {
+    console.log(target.options[target.selectedIndex].value)
+    return target.options[target.selectedIndex].value
+  }
 
   return {
     init: () => {

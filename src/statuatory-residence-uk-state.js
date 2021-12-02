@@ -10,6 +10,7 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
     ties: [],
     tiesNeeded: 0,
     questionType: '',
+    daysSpent: ''
   }
 
   const questions = [
@@ -23,7 +24,7 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
       QUALIFIES: state.QUALIFIES,
       CT: state.test,
       ties: state.ties,
-      tieCount: state.ties.length
+      tieCount: state.ties.length,
     },
     {
       id: 1,
@@ -111,7 +112,7 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
       tieTester: true,
       NQ: [6, 52],
       QUALIFIES: [true, false],
-      tie: 'accomodation',
+      tie: 'Accomodation',
       type: 'RADIO',
       statement: 'By having available, and staying in bought or rented accomodation the you qualify for the accomodation tie to the UK',
     },
@@ -124,7 +125,7 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
       NQ: [521, 6],
       QUALIFIES: [false, false],
       tieQualifier: 'accomodation',
-      tie: 'accomodation',
+      tie: 'Accomodation',
       type: 'RADIO',
       statement: '',
     }, 
@@ -136,7 +137,7 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
       tieTester: true,
       NQ: [6],
       QUALIFIES: [true, false],
-      tie: 'accomodation',
+      tie: 'Accomodation',
       type: 'RADIO',
       statement: 'If you stay with a close relative for 16 or more nights, you are considered having an accomodation tie in the UK.',
     },
@@ -148,7 +149,7 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
       tieTester: true,
       NQ: [7, 61],
       QUALIFIES: [true, false],
-      tie: 'family',
+      tie: 'Family',
       type: 'RADIO',
       statement: 'If you have a spouse or civil partner whom is located in the UK you <span class="fw-bold">may be</span> considered to have a family tie, for the purpouse of this survey we have counted this as 1 family tie.',
     },
@@ -172,7 +173,7 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
       tieTester: true,
       NQ: [8],
       QUALIFIES: [true, false],
-      tie: 'work',
+      tie: 'Work',
       type: 'RADIO',
       statement: 'If you worked in the UK for 40 or more days, you are considered to have a work tie to the uk',
     },
@@ -196,7 +197,7 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
       tieTester: true,
       NQ: [10],
       QUALIFIES: [true, false],
-      tie: '90 day',
+      tie: 'Country',
       type: 'RADIO',
       statement: 'If the majority of your year has been spent in the UK, you are considered to have a country tie to the UK.',
     },
@@ -237,19 +238,18 @@ const UK_STATUATORY_RESIDENCE_STATE = (() => {
       statement: 'If you were a resident in previous years this affects how many ties you need to be considered a UK resident.',
     }
   ]
-
   return {
     getQuestions: () => {
-      return questions
+      return questions;
     },
     getState: () => {
-      return state
+      return state;
     },
     updateCurrentQuestion: (CQ) => {
-      state.CQ = CQ
+      state.CQ = CQ;
     },
     updateNextQuestion: (NQ) => {
-      state.NQ = NQ 
+      state.NQ = NQ
     },
     updatePreviousQuestion: (PQ, t, type) => {
       state.PQ.push(PQ)
